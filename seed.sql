@@ -344,11 +344,14 @@ CREATE TABLE `user_posts_likes` (
   `liked_by_id` int DEFAULT NULL,
   `post_id` int DEFAULT NULL,
   `is_liked` enum('true','false') DEFAULT 'true',
+  `reaction_id` int DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `liked_by_id` (`liked_by_id`,`post_id`),
   KEY `post_id` (`post_id`),
+  KEY `reaction_id` (`reaction_id`),
   CONSTRAINT `user_posts_likes_ibfk_1` FOREIGN KEY (`liked_by_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `user_posts_likes_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `user_posts` (`id`)
+  CONSTRAINT `user_posts_likes_ibfk_2` FOREIGN KEY (`post_id`) REFERENCES `user_posts` (`id`),
+  CONSTRAINT `user_posts_likes_ibfk_3` FOREIGN KEY (`reaction_id`) REFERENCES `user_reactions` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -358,7 +361,7 @@ CREATE TABLE `user_posts_likes` (
 
 LOCK TABLES `user_posts_likes` WRITE;
 /*!40000 ALTER TABLE `user_posts_likes` DISABLE KEYS */;
-INSERT INTO `user_posts_likes` VALUES (1,1,1,'true'),(2,3,1,'true'),(3,2,1,'true'),(4,4,1,'true'),(5,1,2,'true'),(6,3,2,'true'),(7,2,2,'true'),(10,1,3,'true'),(11,2,3,'true');
+INSERT INTO `user_posts_likes` VALUES (1,1,1,'true',6),(2,3,1,'true',6),(3,2,1,'true',6),(4,4,1,'true',6),(5,1,2,'true',6),(6,3,2,'true',6),(7,2,2,'true',6),(10,1,3,'true',6),(11,2,3,'true',6);
 /*!40000 ALTER TABLE `user_posts_likes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -395,6 +398,33 @@ INSERT INTO `user_posts_media` VALUES (1,2,1,'https://www.youtube.com/playlist?l
 UNLOCK TABLES;
 
 --
+-- Table structure for table `user_reactions`
+--
+
+DROP TABLE IF EXISTS `user_reactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `user_reactions` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT NULL,
+  `symbol` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `sequence` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user_reactions`
+--
+
+LOCK TABLES `user_reactions` WRITE;
+/*!40000 ALTER TABLE `user_reactions` DISABLE KEYS */;
+INSERT INTO `user_reactions` VALUES (6,'Like','?','2024-08-30 11:42:19',1),(7,'Celebrate','?','2024-08-30 11:42:19',2),(8,'Support','?','2024-08-30 11:42:19',3),(9,'Funny','?','2024-08-30 11:42:19',4),(10,'Love','❤️','2024-08-30 11:42:19',5),(11,'Insightfull','?','2024-08-30 11:42:19',6);
+/*!40000 ALTER TABLE `user_reactions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user_settings`
 --
 
@@ -406,6 +436,7 @@ CREATE TABLE `user_settings` (
   `is_accepting_connection_request` enum('true','false') DEFAULT NULL,
   `is_accepting_follow_request` enum('true','false') DEFAULT NULL,
   `is_school_shown_in_intro` enum('true','false') DEFAULT NULL,
+  `is_open_to_work` enum('recruiter','everyone','nope') DEFAULT 'nope',
   PRIMARY KEY (`user_id`),
   CONSTRAINT `user_settings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -417,7 +448,7 @@ CREATE TABLE `user_settings` (
 
 LOCK TABLES `user_settings` WRITE;
 /*!40000 ALTER TABLE `user_settings` DISABLE KEYS */;
-INSERT INTO `user_settings` VALUES (1,'true','true','true'),(2,'true','true','true');
+INSERT INTO `user_settings` VALUES (1,'true','true','true','everyone'),(2,'true','true','true','nope');
 /*!40000 ALTER TABLE `user_settings` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -501,4 +532,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-08-30 13:01:46
+-- Dump completed on 2024-08-31 13:57:46
